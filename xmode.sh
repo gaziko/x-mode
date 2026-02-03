@@ -15,7 +15,29 @@ PIP_PACKAGES=()           # глобальные pip пакеты, если св
 NODES=(
     "https://github.com/ltdrdata/ComfyUI-Manager"
     "https://github.com/kijai/ComfyUI-WanVideoWrapper"
+    "https://github.com/ltdrdata/ComfyUI-Impact-Pack"
+    "https://github.com/pythongosssss/ComfyUI-Custom-Scripts"
+    "https://github.com/chflame163/ComfyUI_LayerStyle"
+    "https://github.com/rgthree/rgthree-comfy"
+    "https://github.com/yolain/ComfyUI-Easy-Use"
+    "https://github.com/numz/ComfyUI-SeedVR2_VideoUpscaler"
+    "https://github.com/cubiq/ComfyUI_essentials"
+    "https://github.com/ClownsharkBatwing/RES4LYF"
+    "https://github.com/chrisgoringe/cg-use-everywhere"
+    "https://github.com/ltdrdata/ComfyUI-Impact-Subpack"
+    "https://github.com/Smirnov75/ComfyUI-mxToolkit"
+    "https://github.com/TheLustriVA/ComfyUI-Image-Size-Tools"
+    "https://github.com/ZhiHui6/zhihui_nodes_comfyui"
+    "https://github.com/kijai/ComfyUI-KJNodes"
 )
+
+# ЗАГРУЗКА МОДЕЛИ ПРОМПТИНГА
+QWEN3VL_FILE=(
+"https://huggingface.co/svjack/Qwen3-VL-4B-Instruct-heretic-7refusal"
+
+)
+
+# ЗАГРУЗКА ФАЙЛОВ НУЖНЫХ
 
 CLIP_MODELS=(
     "https://huggingface.co/arhiteector/qwen_3_4b.safetnsors/resolve/main/qwen_3_4b.safetensors" 
@@ -39,7 +61,7 @@ UNET_MODELS=(
 )
 
 VAE_MODELS=(
-    "https://huggingface.co/arhiteector/zimage/resolve/main/flux_vae.safetensors"
+    "https://huggingface.co/gazsuv/pussydetectorv4/resolve/main/zImageClearVae_natural.safetensors"
 )
 
 DIFFUSION_MODELS=( 
@@ -48,13 +70,21 @@ DIFFUSION_MODELS=(
 )
 
 BBOX_MODELS=(
-    "https://huggingface.co/ashllay/YOLO_Models"
+    "https://huggingface.co/gazsuv/pussydetectorv4/blob/main/face_yolov8s.pt"
+    "https://huggingface.co/gazsuv/pussydetectorv4/resolve/main/femaleBodyDetection_yolo26.pt"
+    "https://huggingface.co/gazsuv/pussydetectorv4/resolve/main/female_breast-v4.2.pt"
+    "https://huggingface.co/gazsuv/pussydetectorv4/resolve/main/nipples_yolov8s.pt"
+    "https://huggingface.co/gazsuv/pussydetectorv4/resolve/main/vagina-v4.2.pt"
 
 )
 QWEN3VL=(
-"https://huggingface.co/svjack/Qwen3-VL-4B-Instruct-heretic-7refusal"
 "https://huggingface.co/svjack/Qwen3-VL-4B-Instruct-heretic-7refusal/resolve/main/model-00001-of-00002.safetensors"
 "https://huggingface.co/svjack/Qwen3-VL-4B-Instruct-heretic-7refusal/resolve/main/model-00002-of-00002.safetensors"
+)
+
+UPSLACE_MODELS=(
+"https://huggingface.co/gazsuv/pussydetectorv4/resolve/main/4xUltrasharp_4xUltrasharpV10.pt"
+
 )
 
 
@@ -86,6 +116,7 @@ function provisioning_start() {
     provisioning_get_files "${COMFYUI_DIR}/models/diffusion_models"   "${DIFFUSION_MODELS[@]}"
     provisioning_get_files "${COMFYUI_DIR}/models/ultralytics/bbox"   "${BBOX_MODELS[@]}"
     provisioning_get_files "${COMFYUI_DIR}/models/prompt_generator"   "${QWEN3VL[@]}"
+    provisioning_get_files "${COMFYUI_DIR}/models/prompt_generator"   "${UPSCALE_MODELS[@]}"
 
     echo ""
     echo "Газик настривает → Starting ComfyUI..."
@@ -120,7 +151,9 @@ function provisioning_get_pip_packages() {
         pip install --no-cache-dir "${PIP_PACKAGES[@]}"
     fi
 }
-
+### ─────────────────────────────────────────────
+### СКРИПТ УСТАНОВКИ КАСТОМНЫХ НОД
+### ─────────────────────────────────────────────
 function provisioning_get_nodes() {
     mkdir -p custom_nodes
     for repo in "${NODES[@]}"; do
@@ -162,6 +195,30 @@ function provisioning_get_files() {
 
         wget $auth_header -nc --content-disposition --show-progress -e dotbytes=4M -P "$dir" "$url" || echo "  [!] Download failed: $url"
         echo ""
+    done
+}
+
+}
+### ─────────────────────────────────────────────
+### СКРИПТ СОЗДАНИЯ ФАЙЛА И СКАЧИВАНИЯ ПРОМПТ МОДЕЛИ
+### ─────────────────────────────────────────────
+function provisioning_get_nodes() {
+    mkdir -p prompt_generator
+    for repo in "${QWEN3VL_FILE[@]}"; do
+        dir="${repo##*/}"
+        path="models/prompt_generator/${dir}"
+        requirements="${path}/requirements.txt"
+        if [[ -d "$path" ]]; then
+            echo "Updating node: $dir"
+            (cd "$path" && git pull --ff-only || git fetch && git reset --hard origin/main)
+        else
+            echo "Cloning node: $dir"
+            git clone "$repo" "$path" --recursive
+        fi
+        if [[ -f "$requirements" ]]; then
+            echo "Installing deps for $dir..."
+            pip install --no-cache-dir -r "$requirements"
+        fi
     done
 }
 
