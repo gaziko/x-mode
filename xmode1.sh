@@ -31,8 +31,7 @@ NODES=(
 
 # ЗАГРУЗКА ФАЙЛОВ НУЖНЫХ
 CLIP_MODELS=(
-    "https://huggingface.co/arhiteector/qwen_3_4b.safetensors/resolve/main/qwen_3_4b.safetensors"
-    "https://huggingface.co/arhiteector/zimage/resolve/main/umt5_xxl_fp8_e4m3fn_scaled.safetensors"
+    "https://huggingface.co/Comfy-Org/z_image_turbo/resolve/main/split_files/text_encoders/qwen_3_4b.safetensors"
 )
 
 CKPT_MODELS=(
