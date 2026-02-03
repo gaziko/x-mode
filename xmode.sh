@@ -47,22 +47,15 @@ DIFFUSION_MODELS=(
 
 )
 
-BBOX_MODELS_NIBBLE=(
-    "https://huggingface.co/gazsuv/xmode/resolve/main/female-breast-v4.0-fantasy.pt"
-)
+BBOX_MODELS=(
+    "https://huggingface.co/ashllay/YOLO_Models"
 
-BBOX_MODELS_PUSSY=(
-    "https://huggingface.co/gazsuv/xmode/resolve/main/pussyV2.pt"
 )
-
-BBOX_MODELS_FOOT=(
-   "https://huggingface.co/gazsuv/xmode/resolve/main/foot-yolov8l.pt"
+QWEN3VL=(
+"https://huggingface.co/svjack/Qwen3-VL-4B-Instruct-heretic-7refusal"
+"https://huggingface.co/svjack/Qwen3-VL-4B-Instruct-heretic-7refusal/resolve/main/model-00001-of-00002.safetensors"
+"https://huggingface.co/svjack/Qwen3-VL-4B-Instruct-heretic-7refusal/resolve/main/model-00002-of-00002.safetensors"
 )
-
-BBOX_MODELS_HAND=(
-   "https://huggingface.co/gazsuv/xmode/resolve/main/hand_yolov8s.pt"
-)
-
 
 
 ### ─────────────────────────────────────────────
@@ -73,7 +66,7 @@ function provisioning_start() {
     echo ""
     echo "##############################################"
     echo "#          Provisioning container            #"
-    echo "#     Imran's Flux/Video setup 2026          #"
+    echo "#     gazik    X-MODE  setup 2026            #"
     echo "#        This will take some time            #"
     echo "##############################################"
     echo ""
@@ -91,19 +84,17 @@ function provisioning_start() {
     provisioning_get_files "${COMFYUI_DIR}/models/ckpt"               "${CKPT_MODELS[@]}"
     provisioning_get_files "${COMFYUI_DIR}/models/model_patches"      "${FUN_MODELS[@]}"
     provisioning_get_files "${COMFYUI_DIR}/models/diffusion_models"   "${DIFFUSION_MODELS[@]}"
-    provisioning_get_files "${COMFYUI_DIR}/models/ultralytics/bbox"   "${BBOX_MODELS_NIBBLE[@]}"
-    provisioning_get_files "${COMFYUI_DIR}/models/ultralytics/bbox"   "${BBOX_MODELS_PUSSY[@]}"
-    provisioning_get_files "${COMFYUI_DIR}/models/ultralytics/bbox"   "${BBOX_MODELS_FOOT[@]}"
-    provisioning_get_files "${COMFYUI_DIR}/models/ultralytics/bbox"   "${BBOX_MODELS_HAND[@]}"
+    provisioning_get_files "${COMFYUI_DIR}/models/ultralytics/bbox"   "${BBOX_MODELS[@]}"
+    provisioning_get_files "${COMFYUI_DIR}/models/prompt_generator"   "${QWEN3VL[@]}"
 
     echo ""
-    echo "Provisioning complete → Starting ComfyUI..."
+    echo "Газик настривает → Starting ComfyUI..."
     echo ""
 }
 
 function provisioning_clone_comfyui() {
     if [[ ! -d "${COMFYUI_DIR}" ]]; then
-        echo "Cloning ComfyUI..."
+        echo "Газик клонирует ComfyUI..."
         git clone https://github.com/comfyanonymous/ComfyUI.git "${COMFYUI_DIR}"
     fi
     cd "${COMFYUI_DIR}"
@@ -111,21 +102,21 @@ function provisioning_clone_comfyui() {
 
 function provisioning_install_base_reqs() {
     if [[ -f requirements.txt ]]; then
-        echo "Installing base requirements..."
+        echo "Газик установливает base requirements..."
         pip install --no-cache-dir -r requirements.txt
     fi
 }
 
 function provisioning_get_apt_packages() {
     if [[ ${#APT_PACKAGES[@]} -gt 0 ]]; then
-        echo "Installing apt packages..."
+        echo "Газик устанавливает apt packages..."
         sudo apt update && sudo apt install -y "${APT_PACKAGES[@]}"
     fi
 }
 
 function provisioning_get_pip_packages() {
     if [[ ${#PIP_PACKAGES[@]} -gt 0 ]]; then
-        echo "Installing extra pip packages..."
+        echo "Газик устанавливает extra pip packages..."
         pip install --no-cache-dir "${PIP_PACKAGES[@]}"
     fi
 }
@@ -158,7 +149,7 @@ function provisioning_get_files() {
     local files=("$@")
 
     mkdir -p "$dir"
-    echo "Downloading ${#files[@]} file(s) to $dir..."
+    echo "Скачивание ${#files[@]} file(s) to $dir..."
 
     for url in "${files[@]}"; do
         echo "→ $url"
@@ -180,5 +171,5 @@ if [[ ! -f /.noprovisioning ]]; then
 fi
 
 # Запуск ComfyUI
-echo "=== Starting ComfyUI ==="
+echo "=== Газик запускает ComfyUI ==="
 python main.py --listen 0.0.0.0 --port 8188
