@@ -1,7 +1,5 @@
 #!/bin/bash
-
 set -e
-
 source /venv/main/bin/activate
 
 WORKSPACE=${WORKSPACE:-/workspace}
@@ -31,21 +29,14 @@ NODES=(
     "https://github.com/kijai/ComfyUI-KJNodes"
 )
 
-# ЗАГРУЗКА МОДЕЛИ ПРОМПТИНГА
-QWEN3VL_FILE=(
-"https://huggingface.co/svjack/Qwen3-VL-4B-Instruct-heretic-7refusal"
-
-)
-
 # ЗАГРУЗКА ФАЙЛОВ НУЖНЫХ
-
 CLIP_MODELS=(
-    "https://huggingface.co/arhiteector/qwen_3_4b.safetnsors/resolve/main/qwen_3_4b.safetensors" 
+    "https://huggingface.co/arhiteector/qwen_3_4b.safetensors/resolve/main/qwen_3_4b.safetensors"
     "https://huggingface.co/arhiteector/zimage/resolve/main/umt5_xxl_fp8_e4m3fn_scaled.safetensors"
 )
 
 CKPT_MODELS=(
-     "https://huggingface.co/cyberdelia/CyberRealisticPony/resolve/main/CyberRealisticPony_V15.0_FP32.safetensors"
+    "https://huggingface.co/cyberdelia/CyberRealisticPony/resolve/main/CyberRealisticPony_V15.0_FP32.safetensors"
 )
 
 FUN_MODELS=(
@@ -64,45 +55,42 @@ VAE_MODELS=(
     "https://huggingface.co/gazsuv/pussydetectorv4/resolve/main/zImageClearVae_natural.safetensors"
 )
 
-DIFFUSION_MODELS=( 
+DIFFUSION_MODELS=(
     "https://huggingface.co/T5B/Z-Image-Turbo-FP8/resolve/main/z-image-turbo-fp8-e4m3fn.safetensors"
-
 )
 
 BBOX_0=(
-    "https://huggingface.co/gazsuv/pussydetectorv4/blob/main/face_yolov8s.pt"
-
+    "https://huggingface.co/gazsuv/pussydetectorv4/resolve/main/face_yolov8s.pt"
 )
+
 BBOX_1=(
     "https://huggingface.co/gazsuv/pussydetectorv4/resolve/main/femaleBodyDetection_yolo26.pt"
 )
 
 BBOX_2=(
     "https://huggingface.co/gazsuv/pussydetectorv4/resolve/main/female_breast-v4.2.pt"
-
 )
 
 BBOX_3=(
-"https://huggingface.co/gazsuv/pussydetectorv4/resolve/main/nipples_yolov8s.pt"
-
+    "https://huggingface.co/gazsuv/pussydetectorv4/resolve/main/nipples_yolov8s.pt"
 )
+
 BBOX_4=(
     "https://huggingface.co/gazsuv/pussydetectorv4/resolve/main/vagina-v4.2.pt"
-
 )
+
 BBOX_5=(
     "https://huggingface.co/gazsuv/xmode/resolve/main/assdetailer.pt"
 )
+
 QWEN3VL=(
-"https://huggingface.co/svjack/Qwen3-VL-4B-Instruct-heretic-7refusal/resolve/main/model-00001-of-00002.safetensors"
-"https://huggingface.co/svjack/Qwen3-VL-4B-Instruct-heretic-7refusal/resolve/main/model-00002-of-00002.safetensors"
+    "https://huggingface.co/svjack/Qwen3-VL-4B-Instruct-heretic-7refusal/resolve/main/model-00001-of-00002.safetensors"
+    "https://huggingface.co/svjack/Qwen3-VL-4B-Instruct-heretic-7refusal/resolve/main/model-00002-of-00002.safetensors"
 )
 
-UPSLACE_MODELS=(
-"https://huggingface.co/gazsuv/pussydetectorv4/resolve/main/4xUltrasharp_4xUltrasharpV10.pt"
-
+UPSCALER_MODELS=(
+    "https://huggingface.co/gazsuv/pussydetectorv4/resolve/main/4xUltrasharp_4xUltrasharpV10.pt"
 )
-
 
 ### ─────────────────────────────────────────────
 ### DO NOT EDIT BELOW UNLESS YOU KNOW WHAT YOU ARE DOING
@@ -111,9 +99,9 @@ UPSLACE_MODELS=(
 function provisioning_start() {
     echo ""
     echo "##############################################"
-    echo "#          Provisioning container            #"
-    echo "#     gazik    X-MODE  setup 2026            #"
-    echo "#        This will take some time            #"
+    echo "# Provisioning container                     #"
+    echo "# gazik X-MODE setup 2025-2026               #"
+    echo "# This will take some time                   #"
     echo "##############################################"
     echo ""
 
@@ -124,24 +112,25 @@ function provisioning_start() {
     provisioning_get_pip_packages
 
     provisioning_get_files "${COMFYUI_DIR}/models/clip"               "${CLIP_MODELS[@]}"
-    provisioning_get_files "${COMFYUI_DIR}/models/text_encoders"      "${TEXT_ENCODERS[@]}"
+    provisioning_get_files "${COMFYUI_DIR}/models/text_encoders"     "${TEXT_ENCODERS[@]}"
     provisioning_get_files "${COMFYUI_DIR}/models/unet"               "${UNET_MODELS[@]}"
     provisioning_get_files "${COMFYUI_DIR}/models/vae"                "${VAE_MODELS[@]}"
     provisioning_get_files "${COMFYUI_DIR}/models/ckpt"               "${CKPT_MODELS[@]}"
     provisioning_get_files "${COMFYUI_DIR}/models/model_patches"      "${FUN_MODELS[@]}"
     provisioning_get_files "${COMFYUI_DIR}/models/diffusion_models"   "${DIFFUSION_MODELS[@]}"
+
     provisioning_get_files "${COMFYUI_DIR}/models/ultralytics/bbox"   "${BBOX_0[@]}"
     provisioning_get_files "${COMFYUI_DIR}/models/ultralytics/bbox"   "${BBOX_1[@]}"
     provisioning_get_files "${COMFYUI_DIR}/models/ultralytics/bbox"   "${BBOX_2[@]}"
     provisioning_get_files "${COMFYUI_DIR}/models/ultralytics/bbox"   "${BBOX_3[@]}"
-    provisioning_get_files "${COMFYUI_DIR}/models/ultralytics/bbox"   "${BBOX_3[@]}"
     provisioning_get_files "${COMFYUI_DIR}/models/ultralytics/bbox"   "${BBOX_4[@]}"
     provisioning_get_files "${COMFYUI_DIR}/models/ultralytics/bbox"   "${BBOX_5[@]}"
+
     provisioning_get_files "${COMFYUI_DIR}/models/prompt_generator"   "${QWEN3VL[@]}"
-    provisioning_get_files "${COMFYUI_DIR}/models/prompt_generator"   "${UPSCALE_MODELS[@]}"
+    provisioning_get_files "${COMFYUI_DIR}/models/upscale_models"     "${UPSCALER_MODELS[@]}"
 
     echo ""
-    echo "Газик настривает → Starting ComfyUI..."
+    echo "Газик настроил → Starting ComfyUI..."
     echo ""
 }
 
@@ -173,38 +162,39 @@ function provisioning_get_pip_packages() {
         pip install --no-cache-dir "${PIP_PACKAGES[@]}"
     fi
 }
-### ─────────────────────────────────────────────
-### СКРИПТ УСТАНОВКИ КАСТОМНЫХ НОД
-### ─────────────────────────────────────────────
+
 function provisioning_get_nodes() {
-    mkdir -p custom_nodes
+    mkdir -p "${COMFYUI_DIR}/custom_nodes"
+    cd "${COMFYUI_DIR}/custom_nodes"
+
     for repo in "${NODES[@]}"; do
         dir="${repo##*/}"
-        path="custom_nodes/${dir}"
-        requirements="${path}/requirements.txt"
+        path="./${dir}"
+
         if [[ -d "$path" ]]; then
             echo "Updating node: $dir"
-            (cd "$path" && git pull --ff-only || git fetch && git reset --hard origin/main)
+            (cd "$path" && git pull --ff-only 2>/dev/null || { git fetch && git reset --hard origin/main; })
         else
             echo "Cloning node: $dir"
-            git clone "$repo" "$path" --recursive
+            git clone "$repo" "$path" --recursive || echo " [!] Clone failed: $repo"
         fi
+
+        requirements="${path}/requirements.txt"
         if [[ -f "$requirements" ]]; then
             echo "Installing deps for $dir..."
-            pip install --no-cache-dir -r "$requirements"
+            pip install --no-cache-dir -r "$requirements" || echo " [!] pip requirements failed for $dir"
         fi
     done
 }
 
 function provisioning_get_files() {
-    if [[ $# -lt 2 ]]; then return; fi  # ничего не качаем если пусто
-
+    if [[ $# -lt 2 ]]; then return; fi
     local dir="$1"
     shift
     local files=("$@")
 
     mkdir -p "$dir"
-    echo "Скачивание ${#files[@]} file(s) to $dir..."
+    echo "Скачивание ${#files[@]} file(s) → $dir..."
 
     for url in "${files[@]}"; do
         echo "→ $url"
@@ -215,32 +205,8 @@ function provisioning_get_files() {
             auth_header="--header=Authorization: Bearer $CIVITAI_TOKEN"
         fi
 
-        wget $auth_header -nc --content-disposition --show-progress -e dotbytes=4M -P "$dir" "$url" || echo "  [!] Download failed: $url"
+        wget $auth_header -nc --content-disposition --show-progress -e dotbytes=4M -P "$dir" "$url" || echo " [!] Download failed: $url"
         echo ""
-    done
-}
-
-}
-### ─────────────────────────────────────────────
-### СКРИПТ СОЗДАНИЯ ФАЙЛА И СКАЧИВАНИЯ ПРОМПТ МОДЕЛИ
-### ─────────────────────────────────────────────
-function provisioning_get_nodes() {
-    mkdir -p prompt_generator
-    for repo in "${QWEN3VL_FILE[@]}"; do
-        dir="${repo##*/}"
-        path="models/prompt_generator/${dir}"
-        requirements="${path}/requirements.txt"
-        if [[ -d "$path" ]]; then
-            echo "Updating node: $dir"
-            (cd "$path" && git pull --ff-only || git fetch && git reset --hard origin/main)
-        else
-            echo "Cloning node: $dir"
-            git clone "$repo" "$path" --recursive
-        fi
-        if [[ -f "$requirements" ]]; then
-            echo "Installing deps for $dir..."
-            pip install --no-cache-dir -r "$requirements"
-        fi
     done
 }
 
@@ -251,4 +217,5 @@ fi
 
 # Запуск ComfyUI
 echo "=== Газик запускает ComfyUI ==="
+cd "${COMFYUI_DIR}"
 python main.py --listen 0.0.0.0 --port 8188
