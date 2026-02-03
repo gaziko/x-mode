@@ -69,14 +69,29 @@ DIFFUSION_MODELS=(
 
 )
 
-BBOX_MODELS=(
+BBOX_0=(
     "https://huggingface.co/gazsuv/pussydetectorv4/blob/main/face_yolov8s.pt"
-    "https://huggingface.co/gazsuv/pussydetectorv4/resolve/main/femaleBodyDetection_yolo26.pt"
-    "https://huggingface.co/gazsuv/pussydetectorv4/resolve/main/female_breast-v4.2.pt"
-    "https://huggingface.co/gazsuv/pussydetectorv4/resolve/main/nipples_yolov8s.pt"
-    "https://huggingface.co/gazsuv/pussydetectorv4/resolve/main/vagina-v4.2.pt"
-    "https://huggingface.co/gazsuv/xmode/resolve/main/assdetailer.pt"
 
+)
+BBOX_1=(
+    "https://huggingface.co/gazsuv/pussydetectorv4/resolve/main/femaleBodyDetection_yolo26.pt"
+)
+
+BBOX_2=(
+    "https://huggingface.co/gazsuv/pussydetectorv4/resolve/main/female_breast-v4.2.pt"
+
+)
+
+BBOX_3=(
+"https://huggingface.co/gazsuv/pussydetectorv4/resolve/main/nipples_yolov8s.pt"
+
+)
+BBOX_4=(
+    "https://huggingface.co/gazsuv/pussydetectorv4/resolve/main/vagina-v4.2.pt"
+
+)
+BBOX_5=(
+    "https://huggingface.co/gazsuv/xmode/resolve/main/assdetailer.pt"
 )
 QWEN3VL=(
 "https://huggingface.co/svjack/Qwen3-VL-4B-Instruct-heretic-7refusal/resolve/main/model-00001-of-00002.safetensors"
@@ -115,7 +130,13 @@ function provisioning_start() {
     provisioning_get_files "${COMFYUI_DIR}/models/ckpt"               "${CKPT_MODELS[@]}"
     provisioning_get_files "${COMFYUI_DIR}/models/model_patches"      "${FUN_MODELS[@]}"
     provisioning_get_files "${COMFYUI_DIR}/models/diffusion_models"   "${DIFFUSION_MODELS[@]}"
-    provisioning_get_files "${COMFYUI_DIR}/models/ultralytics/bbox"   "${BBOX_MODELS[@]}"
+    provisioning_get_files "${COMFYUI_DIR}/models/ultralytics/bbox"   "${BBOX_0[@]}"
+    provisioning_get_files "${COMFYUI_DIR}/models/ultralytics/bbox"   "${BBOX_1[@]}"
+    provisioning_get_files "${COMFYUI_DIR}/models/ultralytics/bbox"   "${BBOX_2[@]}"
+    provisioning_get_files "${COMFYUI_DIR}/models/ultralytics/bbox"   "${BBOX_3[@]}"
+    provisioning_get_files "${COMFYUI_DIR}/models/ultralytics/bbox"   "${BBOX_3[@]}"
+    provisioning_get_files "${COMFYUI_DIR}/models/ultralytics/bbox"   "${BBOX_4[@]}"
+    provisioning_get_files "${COMFYUI_DIR}/models/ultralytics/bbox"   "${BBOX_5[@]}"
     provisioning_get_files "${COMFYUI_DIR}/models/prompt_generator"   "${QWEN3VL[@]}"
     provisioning_get_files "${COMFYUI_DIR}/models/prompt_generator"   "${UPSCALE_MODELS[@]}"
 
