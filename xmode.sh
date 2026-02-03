@@ -75,6 +75,7 @@ BBOX_MODELS=(
     "https://huggingface.co/gazsuv/pussydetectorv4/resolve/main/female_breast-v4.2.pt"
     "https://huggingface.co/gazsuv/pussydetectorv4/resolve/main/nipples_yolov8s.pt"
     "https://huggingface.co/gazsuv/pussydetectorv4/resolve/main/vagina-v4.2.pt"
+    "https://huggingface.co/gazsuv/xmode/resolve/main/assdetailer.pt"
 
 )
 QWEN3VL=(
